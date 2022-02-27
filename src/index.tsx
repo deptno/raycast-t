@@ -26,7 +26,6 @@ export default function Command() {
                 <Action
                   title="보기"
                   onAction={() => {
-
                     push(<Configure />)
                   }}
                 />

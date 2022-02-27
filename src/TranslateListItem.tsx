@@ -27,8 +27,8 @@ export const TranslateListItem: FunctionComponent<TranslateListItemData> = (item
           </ActionPanel.Section>
           <ActionPanel.Section>
             <Action.CopyToClipboard
-              title="Copy Install Command"
-              content={`npm install`}
+              title="Copy"
+              content={item.text}
               shortcut={{ modifiers: ["cmd"], key: "." }}
             />
           </ActionPanel.Section>

@@ -14,11 +14,11 @@ export const Configure: FunctionComponent = () => {
       actions={
         <ActionPanel>
           <Action.SubmitForm title="저장" onSubmit={onSubmit} />
+          <Action.OpenInBrowser title="파파고 토큰 발급" url="https://developers.naver.com/apps/#/register" />
         </ActionPanel>
       }
-      isLoading={isLoading}
     >
-      <Form.Description title="파파고" text="https://papago.naver.com" />
+      <Form.Description title="파파고" text="없을시 하단 메뉴에서 토큰 발급" />
       {Object.entries(ID_PALCEHOLDER_PAIR).map(([id, placeholder]) => (
         <Form.TextField key={id} id={id} title={id} placeholder={placeholder} defaultValue={state[id]} />
       ))}

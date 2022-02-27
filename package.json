@@ -4,13 +4,13 @@
   "title": "translator",
   "description": "translate text",
   "icon": "command-icon.png",
-  "author": "deptno@gmail.com",
+  "author": "Bonggyun Lee <udeptno@gmail.com>",
   "license": "MIT",
   "commands": [
     {
       "name": "index",
-      "title": "t",
-      "subtitle": "subtitle",
+      "title": "T",
+      "subtitle": "Translate text by multiple system",
       "description": "translate text from multiple services",
       "mode": "view"
     }
