@@ -1,17 +1,20 @@
 import { Action, ActionPanel, List } from "@raycast/api";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useContext } from "react";
+import { MessageContext } from "../context/MessageContext";
 
 export const HistoryListItem: FunctionComponent<Props> = (props) => {
   const { item, onSelect, onDelete } = props;
+  const m = useContext(MessageContext);
+
   return (
     <List.Item
       title={item}
       actions={
         <ActionPanel>
           <ActionPanel.Section>
-            <Action title="보기" onAction={() => onSelect(item)} />
-            <Action title="삭제" onAction={() => onDelete(item)} />
-            <Action.CopyToClipboard title="복사" content={item} shortcut={{ modifiers: ["cmd"], key: "." }} />
+            <Action title={m(l => l.view)} onAction={() => onSelect(item)} />
+            <Action title={m(l => l.delete)} onAction={() => onDelete(item)} />
+            <Action.CopyToClipboard title={m(l => l.copy)} content={item} shortcut={{ modifiers: ["cmd"], key: "." }} />
           </ActionPanel.Section>
         </ActionPanel>
       }

@@ -3,8 +3,10 @@ import { base64 } from "../util/base64";
 import { TranslateListItemData, TranslateOption } from "./type";
 import { LocalStorage } from "@raycast/api";
 import { URLSearchParams } from "url";
+import { Messanger } from "../context/MessageContext";
+import { Message } from "../message";
 
-export const search = async (options: TranslateOption): Promise<string> => {
+export const search = async (options: TranslateOption, m: Messanger): Promise<string> => {
   const { source, target, text } = options;
   const url = "https://openapi.naver.com/v1/papago/n2mt";
   const form = new URLSearchParams();
@@ -12,10 +14,10 @@ export const search = async (options: TranslateOption): Promise<string> => {
   const xNaverClientSecret = (await LocalStorage.getItem<string>(PapagoKey["X-Naver-Client-Secret"])) ?? "";
 
   if (!xNaverClientId) {
-    throw new Error("비활성화");
+    throw new Error(m((l) => l.disabled));
   }
   if (!xNaverClientSecret) {
-    throw new Error("비활성화");
+    throw new Error(m((l) => l.disabled));
   }
   const headers = {
     "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
@@ -35,8 +37,8 @@ export const search = async (options: TranslateOption): Promise<string> => {
     .then((response) => response.json() as Promise<Response>)
     .then((response) => {
       if ("errorCode" in response) {
-        if (response.errorCode === "024") {
-          throw new Error(`설정 -> ${Object.values(PapagoKey).join(", ")}`);
+        if (response.errorCode === ErrorCode.AuthorizationError) {
+          throw new Error(`${m(l => l.setting)} -> ${Object.values(PapagoKey).join(", ")}`);
         }
         throw new Error(`[${response.errorCode}] ${response.errorMessage}`);
       }
@@ -68,6 +70,10 @@ const ICON = "https://papago.naver.com/static/img/icon_72x72.png";
 enum PapagoKey {
   "X-Naver-Client-Id" = "X-Naver-Client-Id",
   "X-Naver-Client-Secret" = "X-Naver-Client-Secret",
+}
+
+enum ErrorCode {
+  AuthorizationError = "024",
 }
 
 type Response =

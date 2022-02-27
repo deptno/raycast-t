@@ -1,10 +1,12 @@
 import { Action, ActionPanel, Detail, List, showToast, Toast, useNavigation } from "@raycast/api";
 import { TranslateListItemData } from "../service/type";
-import { FunctionComponent, useCallback } from "react";
+import { FunctionComponent, useCallback, useContext } from "react";
+import { MessageContext } from "../context/MessageContext";
 
 export const TranslateListItem: FunctionComponent<Props> = (props) => {
   const { item, onSave } = props;
   const { push } = useNavigation();
+  const m = useContext(MessageContext)
   const onAction = useCallback(() => {
     if (item.text) {
       // todo: support URL
@@ -15,7 +17,7 @@ export const TranslateListItem: FunctionComponent<Props> = (props) => {
           actions={
             <ActionPanel>
               <ActionPanel.Section>
-                <Action.CopyToClipboard title="복사" content={item.text} shortcut={{ modifiers: ["cmd"], key: "." }} />
+                <Action.CopyToClipboard title={m(l => l.copy)} content={item.text} shortcut={{ modifiers: ["cmd"], key: "." }} />
               </ActionPanel.Section>
             </ActionPanel>
           }
@@ -25,7 +27,7 @@ export const TranslateListItem: FunctionComponent<Props> = (props) => {
 
     return showToast({
       style: Toast.Style.Failure,
-      title: "번역문이 없습니다.",
+      title: m(l => l.itDoesNotHaveTraslatedText),
     });
   }, [item]);
 
@@ -37,9 +39,9 @@ export const TranslateListItem: FunctionComponent<Props> = (props) => {
       actions={
         <ActionPanel>
           <ActionPanel.Section>
-            <Action title="보기" onAction={onAction} />
-            <Action title="저장" onAction={onSave} />
-            <Action.CopyToClipboard title="복사" content={item.text} shortcut={{ modifiers: ["cmd"], key: "." }} />
+            <Action title={m(l => l.view)} onAction={onAction} />
+            <Action title={m(l => l.save)} onAction={onSave} />
+            <Action.CopyToClipboard title={m(l => l.copy)} content={item.text} shortcut={{ modifiers: ["cmd"], key: "." }} />
           </ActionPanel.Section>
         </ActionPanel>
       }

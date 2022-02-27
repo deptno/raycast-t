@@ -1,24 +1,29 @@
 import { Action, ActionPanel, Form } from "@raycast/api";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useContext } from "react";
 import { useConfigure } from "../hook/useConfigure";
+import { MessageContext } from "../context/MessageContext";
 
 export const Configure: FunctionComponent = () => {
   const { state, isLoading, onSubmit } = useConfigure();
+  const m = useContext(MessageContext);
 
   if (isLoading) {
     return null;
   }
   return (
     <Form
-      navigationTitle="설정"
+      navigationTitle={m((l) => l.setting)}
       actions={
         <ActionPanel>
-          <Action.SubmitForm title="저장" onSubmit={onSubmit} />
-          <Action.OpenInBrowser title="파파고 토큰 발급" url="https://developers.naver.com/apps/#/register" />
+          <Action.SubmitForm title={m((l) => l.save)} onSubmit={onSubmit} />
+          <Action.OpenInBrowser
+            title={m((l) => l.issuingPapagoToken)}
+            url="https://developers.naver.com/apps/#/register"
+          />
         </ActionPanel>
       }
     >
-      <Form.Description title="파파고" text="없을시 하단 메뉴에서 토큰 발급" />
+      <Form.Description title={m(l => l.papago)} text={m(l => l.issueATokenFromTheBottomMenu)} />
       {Object.entries(ID_PALCEHOLDER_PAIR).map(([id, placeholder]) => (
         <Form.TextField key={id} id={id} title={id} placeholder={placeholder} defaultValue={state[id]} />
       ))}
