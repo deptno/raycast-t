@@ -8,14 +8,7 @@ export const TranslateListItem: FunctionComponent<Props> = (props) => {
   const { push } = useNavigation();
   const onAction = useCallback(() => {
     if (item.text) {
-      if (reWebUrl.test(item.text)) {
-        return open(item.text).then(() => {
-          return showToast({
-            style: Toast.Style.Success,
-            title: "open browser",
-          });
-        });
-      }
+      // todo: support URL
       return push(
         <Detail
           markdown={item.text}
