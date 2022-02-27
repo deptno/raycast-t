@@ -22,5 +22,5 @@ export const HistoryList: FunctionComponent<Props> = (props) => {
 type Props = {
   onSelect(text: string): void;
   onDelete(text: string): void;
-  items: string[]
+  items: string[];
 };
