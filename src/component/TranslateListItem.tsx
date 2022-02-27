@@ -1,10 +1,9 @@
-import { Action, ActionPanel, Detail, List, open, showToast, Toast, useNavigation } from "@raycast/api";
+import { Action, ActionPanel, Detail, List, showToast, Toast, useNavigation } from "@raycast/api";
 import { TranslateListItemData } from "../service/type";
 import { FunctionComponent, useCallback } from "react";
-import { reWebUrl } from "../util/reWebUrl";
 
 export const TranslateListItem: FunctionComponent<Props> = (props) => {
-  const { item, onSave } = props
+  const { item, onSave } = props;
   const { push } = useNavigation();
   const onAction = useCallback(() => {
     if (item.text) {
