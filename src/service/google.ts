@@ -10,7 +10,7 @@ export const search = async (options: TranslateOption): Promise<string> => {
 export const createListItem = (text: string): TranslateListItemData => {
   return {
     text,
-    service: "Google",
+    service: "구글",
     key: base64(text) || "id",
     icon: ICON,
   };
