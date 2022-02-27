@@ -29,8 +29,7 @@ export default function Command() {
       .then((words) => {
         const index = words.indexOf(text);
         if (index !== -1) {
-          return [
-            ...words.splice(0, index), ...words.splice(index + 1, words.length - 1)];
+          return [...words.splice(0, index), ...words.splice(index + 1, words.length - 1)];
         }
 
         return words;

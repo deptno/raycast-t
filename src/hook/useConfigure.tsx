@@ -9,7 +9,7 @@ export const useConfigure = () => {
     const invalidIdList = entries
       .filter(([id, value]) => {
         if (value.length === 0) {
-          return false
+          return false;
         }
         return value.length !== ID_PALCEHOLDER_PAIR[id as keyof typeof ID_PALCEHOLDER_PAIR].length;
       })
@@ -66,8 +66,8 @@ export const useConfigure = () => {
   return {
     isLoading,
     state,
-    onSubmit
-  }
+    onSubmit,
+  };
 };
 
 const ID_PALCEHOLDER_PAIR = {

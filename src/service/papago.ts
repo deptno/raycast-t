@@ -8,8 +8,8 @@ export const search = async (options: TranslateOption): Promise<string> => {
   const { source, target, text } = options;
   const url = "https://openapi.naver.com/v1/papago/n2mt";
   const form = new URLSearchParams();
-  const xNaverClientId = await LocalStorage.getItem<string>(PapagoKey["X-Naver-Client-Id"]) ?? "";
-  const xNaverClientSecret = await LocalStorage.getItem<string>(PapagoKey["X-Naver-Client-Secret"]) ?? "";
+  const xNaverClientId = (await LocalStorage.getItem<string>(PapagoKey["X-Naver-Client-Id"])) ?? "";
+  const xNaverClientSecret = (await LocalStorage.getItem<string>(PapagoKey["X-Naver-Client-Secret"])) ?? "";
 
   if (!xNaverClientId) {
     throw new Error("비활성화");
@@ -30,7 +30,7 @@ export const search = async (options: TranslateOption): Promise<string> => {
   return fetch(url, {
     headers,
     method: "post",
-    body: form
+    body: form,
   })
     .then((response) => response.json() as Promise<Response>)
     .then((response) => {
@@ -49,7 +49,7 @@ export const createListItem = (text: string): TranslateListItemData => {
     text,
     service: "파파고",
     key: base64(text) || id,
-    icon: ICON
+    icon: ICON,
   };
 };
 export const id = "papago";
@@ -70,14 +70,16 @@ enum PapagoKey {
   "X-Naver-Client-Secret" = "X-Naver-Client-Secret",
 }
 
-type Response = {
-  message: {
-    result: {
-      translatedText: string;
-    };
-  };
-} | ErrorResponse
+type Response =
+  | {
+      message: {
+        result: {
+          translatedText: string;
+        };
+      };
+    }
+  | ErrorResponse;
 type ErrorResponse = {
-  errorCode: string
-  errorMessage: string
-}
+  errorCode: string;
+  errorMessage: string;
+};

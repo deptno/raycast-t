@@ -15,8 +15,8 @@ export const createListItem = (text: string): TranslateListItemData => {
     icon: ICON,
   };
 };
-export const id = "google"
+export const id = "google";
 export const getSiteTranslationUrl = (options: TranslateOption, url: string) => {
-  return ''
-}
+  return "";
+};
 const ICON = "https://www.google.com/favicon.ico";

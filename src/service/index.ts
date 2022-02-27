@@ -1,2 +1,2 @@
-export * as google from './google'
-export * as papago from './papago'
+export * as google from "./google";
+export * as papago from "./papago";

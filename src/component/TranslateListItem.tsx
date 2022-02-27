@@ -48,6 +48,6 @@ export const TranslateListItem: FunctionComponent<Props> = (props) => {
 };
 
 type Props = {
-  item: TranslateListItemData
-  onSave(): void
-}
+  item: TranslateListItemData;
+  onSave(): void;
+};
