@@ -1,7 +1,7 @@
 import { google, papago } from "./service";
 import { useEffect, useState } from "react";
 import { debounce } from "lodash";
-import { TranslateListItemData } from "./service/type";
+import { TranslateListItemData, TranslateService } from "./service/type";
 
 export const useSearch = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -12,16 +12,7 @@ export const useSearch = () => {
     if (text) {
       setIsLoading(true);
 
-      Promise.all([
-        google
-          .search({ source: "en", target: "ko", text })
-          .catch((e) => "error: " + e.message)
-          .then(google.createListItem),
-        papago
-          .search({ source: "en", target: "ko", text })
-          .catch((e) => "error: " + e.message)
-          .then(papago.createListItem),
-      ])
+      Promise.all([search(google, text), search(papago, text)])
         .then(setItemList)
         .finally(() => setIsLoading(false));
     } else {
@@ -37,8 +28,9 @@ export const useSearch = () => {
     itemList,
   };
 };
-
-const DEFAULT_ITEM_LIST = [
-  google.createListItem(''),
-  papago.createListItem(''),
-]
+const search = (service: TranslateService, text: string) =>
+  service
+    .search({ source: "en", target: "ko", text })
+    .catch((e: Error) => "error: " + e.message)
+    .then(service.createListItem);
+const DEFAULT_ITEM_LIST = [google.createListItem(""), papago.createListItem("")];

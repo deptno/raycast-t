@@ -3,7 +3,7 @@ import { base64 } from "../util/base64";
 import { TranslateListItemData, TranslateOption } from "./type";
 import { LocalStorage } from "@raycast/api";
 
-export const search = async (options: TranslateOption) => {
+export const search = async (options: TranslateOption): Promise<string> => {
   const { source, target, text } = options;
   const url = "https://openapi.naver.com/v1/papago/n2mt";
   const form = new URLSearchParams();

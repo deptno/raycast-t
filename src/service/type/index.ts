@@ -10,3 +10,8 @@ export type TranslateOption = {
   target: "ko" | string;
   text: string;
 };
+
+export type TranslateService = {
+  search(options: TranslateOption): Promise<string>
+  createListItem(text: string): TranslateListItemData
+}
