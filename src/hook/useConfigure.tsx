@@ -8,6 +8,9 @@ export const useConfigure = () => {
     const entries = Object.entries(values);
     const invalidIdList = entries
       .filter(([id, value]) => {
+        if (value.length === 0) {
+          return false
+        }
         return value.length !== ID_PALCEHOLDER_PAIR[id as keyof typeof ID_PALCEHOLDER_PAIR].length;
       })
       .map(([id]) => {

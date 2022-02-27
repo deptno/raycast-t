@@ -8,11 +8,19 @@ export const search = async (options: TranslateOption): Promise<string> => {
   const { source, target, text } = options;
   const url = "https://openapi.naver.com/v1/papago/n2mt";
   const form = new URLSearchParams();
+  const xNaverClientId = await LocalStorage.getItem<string>(PapagoKey["X-Naver-Client-Id"]) ?? "";
+  const xNaverClientSecret = await LocalStorage.getItem<string>(PapagoKey["X-Naver-Client-Secret"]) ?? "";
+
+  if (!xNaverClientId) {
+    throw new Error("비활성화");
+  }
+  if (!xNaverClientSecret) {
+    throw new Error("비활성화");
+  }
   const headers = {
     "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-    [PapagoKey["X-Naver-Client-Id"]]: (await LocalStorage.getItem<string>(PapagoKey["X-Naver-Client-Id"])) ?? "",
-    [PapagoKey["X-Naver-Client-Secret"]]:
-      (await LocalStorage.getItem<string>(PapagoKey["X-Naver-Client-Secret"])) ?? "",
+    [PapagoKey["X-Naver-Client-Id"]]: xNaverClientId,
+    [PapagoKey["X-Naver-Client-Secret"]]: xNaverClientSecret,
   };
 
   form.append("source", source);
@@ -22,17 +30,17 @@ export const search = async (options: TranslateOption): Promise<string> => {
   return fetch(url, {
     headers,
     method: "post",
-    body: form,
+    body: form
   })
     .then((response) => response.json() as Promise<Response>)
     .then((response) => {
-      if ('errorCode' in response) {
-        if (response.errorCode === '024') {
-          throw new Error(`설정 -> ${Object.values(PapagoKey).join(', ')}`)
+      if ("errorCode" in response) {
+        if (response.errorCode === "024") {
+          throw new Error(`설정 -> ${Object.values(PapagoKey).join(", ")}`);
         }
-        throw new Error(`[${response.errorCode}] ${response.errorMessage}`)
+        throw new Error(`[${response.errorCode}] ${response.errorMessage}`);
       }
-      return response
+      return response;
     })
     .then((response) => response.message.result.translatedText);
 };
@@ -41,19 +49,19 @@ export const createListItem = (text: string): TranslateListItemData => {
     text,
     service: "파파고",
     key: base64(text) || id,
-    icon: ICON,
+    icon: ICON
   };
 };
-export const id = "papago"
+export const id = "papago";
 export const getSiteTranslationUrl = (options: TranslateOption, url: string) => {
-  const params =  new URLSearchParams()
-  params.append('source', options.source)
-  params.append('locale', options.target)
-  params.append('target', options.target)
-  params.append('url', url)
+  const params = new URLSearchParams();
+  params.append("source", options.source);
+  params.append("locale", options.target);
+  params.append("target", options.target);
+  params.append("url", url);
 
-  return `https://papago.naver.net/website${params.toString()}`
-}
+  return `https://papago.naver.net/website${params.toString()}`;
+};
 
 const ICON = "https://papago.naver.com/static/img/icon_72x72.png";
 
