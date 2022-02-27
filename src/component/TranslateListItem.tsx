@@ -1,17 +1,21 @@
-import { Action, ActionPanel, Detail, List, showToast, Toast, useNavigation } from "@raycast/api";
-import { TranslateListItemData } from "./service/type";
+import { Action, ActionPanel, Detail, List, open, showToast, Toast, useNavigation } from "@raycast/api";
+import { TranslateListItemData } from "../service/type";
 import { FunctionComponent, useCallback } from "react";
+import { reWebUrl } from "../util/reWebUrl";
 
-export const TranslateListItem: FunctionComponent<TranslateListItemData> = (item) => {
+export const TranslateListItem: FunctionComponent<Props> = (props) => {
+  const { item, onSave } = props
   const { push } = useNavigation();
-  const onSave = useCallback(() => {
-    return showToast({
-      style: Toast.Style.Animated,
-      title: "todo:",
-    });
-  }, []);
   const onAction = useCallback(() => {
     if (item.text) {
+      if (reWebUrl.test(item.text)) {
+        return open(item.text).then(() => {
+          return showToast({
+            style: Toast.Style.Success,
+            title: "open browser",
+          });
+        });
+      }
       return push(
         <Detail
           markdown={item.text}
@@ -19,8 +23,7 @@ export const TranslateListItem: FunctionComponent<TranslateListItemData> = (item
           actions={
             <ActionPanel>
               <ActionPanel.Section>
-                <Action title="저장" onAction={onSave} />
-                <Action.CopyToClipboard title="Copy" content={item.text} shortcut={{ modifiers: ["cmd"], key: "." }} />
+                <Action.CopyToClipboard title="복사" content={item.text} shortcut={{ modifiers: ["cmd"], key: "." }} />
               </ActionPanel.Section>
             </ActionPanel>
           }
@@ -43,12 +46,16 @@ export const TranslateListItem: FunctionComponent<TranslateListItemData> = (item
         <ActionPanel>
           <ActionPanel.Section>
             <Action title="보기" onAction={onAction} />
-          </ActionPanel.Section>
-          <ActionPanel.Section>
-            <Action.CopyToClipboard title="Copy" content={item.text} shortcut={{ modifiers: ["cmd"], key: "." }} />
+            <Action title="저장" onAction={onSave} />
+            <Action.CopyToClipboard title="복사" content={item.text} shortcut={{ modifiers: ["cmd"], key: "." }} />
           </ActionPanel.Section>
         </ActionPanel>
       }
     />
   );
 };
+
+type Props = {
+  item: TranslateListItemData
+  onSave(): void
+}

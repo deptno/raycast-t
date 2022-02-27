@@ -12,6 +12,8 @@ export type TranslateOption = {
 };
 
 export type TranslateService = {
-  search(options: TranslateOption): Promise<string>
-  createListItem(text: string): TranslateListItemData
-}
+  id: string;
+  search(options: TranslateOption): Promise<string>;
+  createListItem(text: string): TranslateListItemData;
+  getSiteTranslationUrl(options: TranslateOption, url: string): string;
+};
