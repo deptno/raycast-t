@@ -1,42 +1,14 @@
-import { Action, ActionPanel, getPreferenceValues, Icon, List, showToast, Toast, useNavigation } from "@raycast/api";
+import { Action, ActionPanel, getPreferenceValues, Icon, List, useNavigation } from "@raycast/api";
 import { useSearch } from "./hook/useSearch";
 import { TranslateListItem } from "./component/TranslateListItem";
 import { Configure } from "./component/Configure";
 import { HistoryList } from "./component/HistoryList";
-import { useCallback } from "react";
-import { get, set } from "./util/storage";
-import { StorageKey } from "./constnat";
-import { useRefresh } from "./hook/useRefresh";
+import { useHistory } from "./hook/useHistory";
 
 export default function Command() {
   const { source, target } = getPreferenceValues();
-  const { refreshCount, refresh } = useRefresh();
   const { isLoading, text, setText, itemList } = useSearch(source, target);
-  const onSave = useCallback(() => {
-    get<string[]>(StorageKey.words, [])
-      .then((words) => [text, ...words])
-      .then((values) => set(StorageKey.words, values))
-      .then(refresh)
-      .catch(() => {
-        return showToast({
-          style: Toast.Style.Failure,
-          title: "저장 실패",
-        });
-      });
-  }, [text]);
-  const onDelete = useCallback((text) => {
-    get<string[]>(StorageKey.words, [])
-      .then((words) => {
-        const index = words.indexOf(text);
-        if (index !== -1) {
-          return [...words.splice(0, index), ...words.splice(index + 1, words.length - 1)];
-        }
-
-        return words;
-      })
-      .then((words) => set(StorageKey.words, words))
-      .then(refresh);
-  }, []);
+  const { histories, onSave, onDelete } = useHistory(text);
   const { push } = useNavigation();
 
   return (
@@ -45,6 +17,9 @@ export default function Command() {
         {itemList.map((item) => (
           <TranslateListItem key={item.key} item={item} onSave={onSave} />
         ))}
+      </List.Section>
+      <List.Section title="저장된 검색 결과" subtitle={`기록(${histories.length})`}>
+        <HistoryList items={histories} onSelect={setText} onDelete={onDelete} />
       </List.Section>
       <List.Section title="설정">
         <List.Item
@@ -65,9 +40,6 @@ export default function Command() {
             </ActionPanel>
           }
         />
-      </List.Section>
-      <List.Section title="저장된 검색 결과" subtitle="기록" key={refreshCount}>
-        <HistoryList onSelect={setText} onDelete={onDelete} />
       </List.Section>
     </List>
   );
